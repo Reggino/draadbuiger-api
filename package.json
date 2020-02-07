@@ -23,5 +23,6 @@
   },
   "engines": {
     "node": "12"
-  }
+  },
+  "license": "UNLICENSED"
 }
