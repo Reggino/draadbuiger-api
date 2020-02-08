@@ -2,7 +2,6 @@
 
 import WebSocket, { Server as WebSocketServer } from "ws";
 import { Stream, Readable } from "stream";
-import { format } from "util";
 import { spawn } from "child_process";
 import Splitter from "stream-split";
 
@@ -34,14 +33,6 @@ export default class RaspividStreamer {
   };
 
   public get_feed = (): Readable => {
-    const msk = "raspivid -t 0 -o - -w %d -h %d -fps %d";
-    const cmd = format(
-      msk,
-      this.options.width,
-      this.options.height,
-      this.options.fps
-    );
-    console.log(cmd);
     const streamer = spawn("raspivid", [
       "-t",
       "0",
