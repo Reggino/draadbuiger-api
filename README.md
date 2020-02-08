@@ -6,6 +6,9 @@
 - Install NVM (as root user)  (https://github.com/nvm-sh/nvm)
 - Install yarn (https://classic.yarnpkg.com/en/docs/install/#debian-stable)
 - install git
+- Install https://elinux.org/RPi-Cam-Web-Interface , configure:
+  - autostart=on
+  - port=81
 - Run 
 ```
 mkdir /data/
