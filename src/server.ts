@@ -23,11 +23,21 @@ app.get("/image.mjpeg", (req: Request, res: Response) => {
   });
 
   let requestClosed = false;
+  let fps = 0;
+  const fpsInterval = setInterval(() => {
+    console.log("fps", fps);
+    fps = 0;
+  }, 1000);
+
   req.on("close", () => {
+    if (fpsInterval) {
+      clearInterval(fpsInterval);
+    }
     requestClosed = true;
   });
 
   const serveImage = () => {
+    fps++;
     res.write("--myboundary\r\n");
     res.write("Content-Type: image/jpeg\r\n");
     res.write("\r\n");
