@@ -36,7 +36,6 @@ app.get("/image.mjpeg", (req: Request, res: Response) => {
       res.write("\r\n");
       if (requestClosed) {
         res.end();
-        console.log("done");
         return;
       }
       serveImage();
