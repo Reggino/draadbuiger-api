@@ -1,17 +1,52 @@
-import http from "http";
 import express, { Request, Response } from "express";
+import nocache from "nocache";
+import cors from "cors";
+import { createReadStream } from "fs";
 
 const app = express();
-const server = http.createServer(app);
+
+app.use(cors());
+app.use(nocache());
 
 app.get("/", (req: Request, res: Response) => {
   res.json({ hello: "world" });
 });
-app.get("/image", (req: Request, res: Response) => {
+app.get("/image.jpg", (req: Request, res: Response) => {
   res.sendFile("/dev/shm/mjpeg/cam.jpg");
 });
+app.get("/image.mjpeg", (req: Request, res: Response) => {
+  res.writeHead(200, {
+    "Content-Type": "multipart/x-mixed-replace; boundary=myboundary",
+    "Cache-Control": "no-cache",
+    Connection: "close",
+    Pragma: "no-cache"
+  });
 
-server.listen(80, () => {
+  let requestClosed = false;
+  req.on("close", () => {
+    requestClosed = true;
+  });
+
+  const serveImage = () => {
+    res.write("--myboundary\r\n");
+    res.write("Content-Type: image/jpeg\r\n");
+    res.write("\r\n");
+    const jpegStream = createReadStream("/dev/shm/mjpeg/cam.jpg");
+    jpegStream.on("end", data => {
+      res.write("\r\n");
+      if (requestClosed) {
+        res.end();
+        console.log("done");
+        return;
+      }
+      serveImage();
+    });
+    jpegStream.pipe(res, { end: false });
+  };
+
+  serveImage();
+});
+
+app.listen(80, () => {
   console.log("Draadbuiger API listening on port", 80);
-  // console.log("Raspivid streamer configured as ", raspividStreamer.options);
 });
