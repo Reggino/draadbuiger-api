@@ -3,8 +3,13 @@ import nocache from "nocache";
 import cors from "cors";
 import { createReadStream } from "fs";
 
-const app = express();
+// CONFIG
+// max 50 fps
+const MAX_FPS = 25;
 
+// APP
+const minMsPerFrame = 1000 / MAX_FPS;
+const app = express();
 app.use(cors());
 app.use(nocache());
 
@@ -23,11 +28,12 @@ app.get("/image.mjpeg", (req: Request, res: Response) => {
   });
 
   let requestClosed = false;
+  let lastFrameTime = 0;
   let fps = 0;
   const fpsInterval = setInterval(() => {
-    console.log("fps", fps);
+    console.log("Camera fps", fps / 10);
     fps = 0;
-  }, 1000);
+  }, 10000);
 
   req.on("close", () => {
     if (fpsInterval) {
@@ -37,6 +43,7 @@ app.get("/image.mjpeg", (req: Request, res: Response) => {
   });
 
   const serveImage = () => {
+    lastFrameTime = new Date().getTime();
     fps++;
     res.write("--myboundary\r\n");
     res.write("Content-Type: image/jpeg\r\n");
@@ -48,7 +55,14 @@ app.get("/image.mjpeg", (req: Request, res: Response) => {
         res.end();
         return;
       }
-      serveImage();
+      const lastFrameDelta = new Date().getTime() - lastFrameTime;
+      // limit to 50 fps
+      if (lastFrameDelta >= minMsPerFrame) {
+        serveImage();
+        return;
+      }
+
+      setTimeout(serveImage, minMsPerFrame - lastFrameDelta);
     });
     jpegStream.pipe(res, { end: false });
   };
