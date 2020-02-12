@@ -13,6 +13,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "nocache": "^2.1.0",
+    "swagger-ui-dist": "^3.25.0",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.5"
   },
@@ -21,7 +22,7 @@
   },
   "devDependencies": {
     "eslint": "^6.8.0",
-    "eslint-config-kingsquare": "^6.0.1",
+    "eslint-config-kingsquare": "^6.0.2",
     "prettier": "^1.19.1"
   },
   "engines": {

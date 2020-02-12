@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import nocache from "nocache";
 import cors from "cors";
 import { createReadStream } from "fs";
+import { absolutePath } from "swagger-ui-dist";
 
 // CONFIG
 // max 50 fps
@@ -11,11 +12,9 @@ const MAX_FPS = 25;
 const minMsPerFrame = 1000 / MAX_FPS;
 const app = express();
 app.use(cors());
+app.use(express.static("public"));
+app.use(express.static(absolutePath()));
 app.use(nocache());
-
-app.get("/", (req: Request, res: Response) => {
-  res.json({ hello: "world" });
-});
 app.get("/image.jpg", (req: Request, res: Response) => {
   res.sendFile("/dev/shm/mjpeg/cam.jpg");
 });
@@ -64,7 +63,10 @@ app.get("/image.mjpeg", (req: Request, res: Response) => {
 
       setTimeout(serveImage, minMsPerFrame - lastFrameDelta);
     });
-    jpegStream.pipe(res, { end: false });
+    jpegStream.pipe(
+      res,
+      { end: false }
+    );
   };
 
   serveImage();

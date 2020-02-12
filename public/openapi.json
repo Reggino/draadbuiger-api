@@ -1,0 +1,149 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Draadbuiger API",
+    "description": "Bow down!"
+  },
+  "servers": [
+    {
+      "url": "http://draadbuigpi/"
+    }
+  ],
+  "paths": {
+    "/image.jpg": {
+      "get": {
+        "description": "Get the latest (still) image from the Webcam",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A .jpg-file",
+            "content": {
+              "image/jpg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/image.mjpeg": {
+      "get": {
+        "description": "Get the current Webcam stream in .mjpeg format",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A .mjpeg-stream",
+            "content": {
+              "video/x-motion-jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/gpio/{pin}": {
+      "get": {
+        "description": "Read and return a GPIO pin value",
+        "parameters": [
+          {
+            "name": "pin",
+            "in": "path",
+            "description": "PIN to read",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current pin value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Write a GPIO pin value",
+        "parameters": [
+          {
+            "name": "pin",
+            "in": "path",
+            "description": "PIN to read",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "high",
+            "in": "query",
+            "description": "High or low (true or false)",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Write succesfull"
+          }
+        }
+      }
+    },
+    "/serial": {
+      "post": {
+        "description": "Write to serial port",
+        "parameters": [
+          {
+            "name": "command",
+            "in": "query",
+            "description": "command to execute",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Command executed"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
