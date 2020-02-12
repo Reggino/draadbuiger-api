@@ -26,6 +26,16 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "An error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -42,6 +52,16 @@
                 "schema": {
                   "type": "string",
                   "format": "binary"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -74,6 +94,16 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "An error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       },
@@ -103,6 +133,16 @@
         "responses": {
           "200": {
             "description": "Write succesfull"
+          },
+          "500": {
+            "description": "An error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -124,6 +164,16 @@
         "responses": {
           "200": {
             "description": "Command executed"
+          },
+          "500": {
+            "description": "An error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -133,11 +183,11 @@
     "schemas": {
       "Error": {
         "type": "object",
-        "required": ["code", "message"],
+        "required": ["message"],
         "properties": {
-          "code": {
-            "type": "integer",
-            "format": "int32"
+          "serialized": {
+            "type": "object",
+            "additionalProperties": true
           },
           "message": {
             "type": "string"
