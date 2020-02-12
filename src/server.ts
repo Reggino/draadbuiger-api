@@ -5,6 +5,7 @@ import { absolutePath } from "swagger-ui-dist";
 import mjpegMiddleware from "./middleware/image.mjpeg";
 import { readMiddleware, writeMiddleware } from "./middleware/gpio";
 import { errorHandler } from "./middleware/errorHandler";
+import serialMiddleware from "./middleware/serial";
 
 const app = express();
 app.use(cors());
@@ -17,6 +18,7 @@ app.get("/image.jpg", (req: Request, res: Response) => {
 app.get("/image.mjpeg", mjpegMiddleware);
 app.get("/gpio/:pin", readMiddleware);
 app.post("/gpio/:pin", writeMiddleware);
+app.post("/serial", serialMiddleware);
 app.use(errorHandler);
 
 app.listen(80, () => {
