@@ -45,7 +45,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     throw new Error("Serial port is busy. Please wait");
   }
   isIdle = false;
-  port.write(req.query.command);
+  port.write(`${req.query.command} \n`);
   waitForIdle()
     .then(() => {
       isIdle = true;
